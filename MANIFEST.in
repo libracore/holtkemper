@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include holtkemper *.css
+recursive-include holtkemper *.csv
+recursive-include holtkemper *.html
+recursive-include holtkemper *.ico
+recursive-include holtkemper *.js
+recursive-include holtkemper *.json
+recursive-include holtkemper *.md
+recursive-include holtkemper *.png
+recursive-include holtkemper *.py
+recursive-include holtkemper *.svg
+recursive-include holtkemper *.txt
+recursive-exclude holtkemper *.pyc
