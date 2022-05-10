@@ -32,6 +32,12 @@ def get_data():
                        "description": _("Sales Invoice")
                    },
                    {
+                        "type": "doctype",
+                        "name": "Purchase Order",
+                        "label": _("Purchase Order"),
+                        "description": _("Purchase Order")
+                   },
+                   {
                         "type": "report",
                         "name": "Auftragsbuch",
                         "label": _("Auftragsbuch"),
