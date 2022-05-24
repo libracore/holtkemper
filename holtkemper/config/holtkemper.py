@@ -36,6 +36,19 @@ def get_data():
                         "name": "Purchase Order",
                         "label": _("Purchase Order"),
                         "description": _("Purchase Order")
+                   }
+            ]
+        },
+        {
+            "label": _("Monitoring"),
+            "icon": "fa fa-money",
+            "items": [
+                   {
+                       "type": "report",
+                       "name": "Planung",
+                       "label": _("Planung"),
+                       "doctype": "Delivery Note",
+                       "is_query_report": True
                    },
                    {
                         "type": "report",
