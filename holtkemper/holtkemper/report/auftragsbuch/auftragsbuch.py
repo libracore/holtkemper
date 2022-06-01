@@ -13,7 +13,7 @@ def execute(filters=None):
 
 def get_columns():
     return [
-        {"label": _("Position Nr."), "fieldname": "po_no", "fieldtype": "Data", "width": 110},
+        {"label": _("Kunde-Ref."), "fieldname": "po_no", "fieldtype": "Data", "width": 110},
         {"label": _("Beleg Datum"), "fieldname": "sales_order_date", "fieldtype": "Date", "width": 75},
         {"label": _("Belegsumme"), "fieldname": "base_grand_total", "fieldtype": "Currency", "width": 100},
         {"label": _("Rechg-Nr.:"), "fieldname": "sales_invoice", "fieldtype": "Link", "options": "Sales Invoice", "width": 90},
@@ -54,7 +54,7 @@ def get_data(filters):
             `base_doc`.`sales_order` AS `sales_order`,
             `base_doc`.`customer_name` AS `customer_name`,
             `base_doc`.`relation` AS `relation`,
-            `so`.`gestellungsdatum` AS `gestellungsdatum`,
+            `base_doc`.`gestellungsdatum` AS `gestellungsdatum`,
             `base_doc`.`supplier` AS `supplier`,
             `base_doc`.`fl30042` AS `fl30042`,
             `base_doc`.`fl33969` AS `fl33969`,
@@ -72,6 +72,7 @@ def get_data(filters):
                 `dn`.`customer_name`,
                 `dn`.`customer`,
                 `dn`.`relation`,
+                `dn`.`gestellungsdatum`,
                 IF (("FL 30042" | "FL 33969" | "FL 38141" | "FL 39228") = `dn`.`truck`, "Holtkemper", `sup`.`supplier_name`) AS `supplier`,
                 IF (`dn`.`truck` = "FL30042", `dn`.`base_grand_total`, 0) AS `fl30042`,
                 IF (`dn`.`truck` = "FL33969", `dn`.`base_grand_total`, 0) AS `fl33969`,

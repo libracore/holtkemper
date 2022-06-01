@@ -64,13 +64,13 @@ def get_data(filters):
                         `parent` AS `sinv`
                     FROM `tabSales Invoice Item`
                     WHERE `delivery_note` = `dn`.`name`
-                    AND `docstatus` = 1
+                    AND `docstatus` <= 1
                 ) AS `sinv`
                 
             FROM `tabDelivery Note` AS `dn`
             LEFT JOIN `tabSupplier` AS `sup` ON `dn`.`supplier` = `sup`.`name`
             LEFT JOIN `tabPurchase Order` AS `po` ON `dn`.`name` = `po`.`delivery_note`
-            WHERE `dn`.`docstatus` = 1
+            WHERE `dn`.`docstatus` <= 1
                 {conditions}
         ) AS `base_doc`
         ORDER BY `base_doc`.`gestellungsdatum` ASC
