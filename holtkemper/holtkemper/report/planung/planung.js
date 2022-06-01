@@ -20,14 +20,14 @@ frappe.query_reports["Planung"] = {
             "fieldname":"from_date",
             "label": __("From Date"),
             "fieldtype": "Date",
-            "default": frappe.datetime.get_today(),
+            "default": frappe.datetime.add_days(frappe.datetime.get_today(), (-1) * ((new Date().getDay() - 1))),
             "width": "60px"
         },
         {
             "fieldname":"to_date",
             "label": __("To Date"),
             "fieldtype": "Date",
-            "default": frappe.datetime.add_days(frappe.datetime.get_today(), +7),
+            "default": frappe.datetime.add_days(frappe.datetime.get_today(), (-1) * ((new Date().getDay() - 1)) +6),
             "width": "60px"
         },
     ]
