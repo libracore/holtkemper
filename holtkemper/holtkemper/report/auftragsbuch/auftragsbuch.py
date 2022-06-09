@@ -23,6 +23,7 @@ def get_columns():
         {"label": _("Relation"), "fieldname": "relation", "fieldtype": "Data", "width": 130},
         {"label": _("Datum"), "fieldname": "gestellungsdatum", "fieldtype": "Date", "width": 60},
         {"label": _("Sub"), "fieldname": "supplier", "fieldtype": "Data", "width": 100},
+        {"label": _("SUB-Preis-Nr.:"), "fieldname": "purchase_order", "fieldtype": "Link", "options": "Purchase Order", "width": 90},
         {"label": _("FL 30042"), "fieldname": "fl30042", "fieldtype": "Float", "precision": 2, "width": 80},
         {"label": _("FL 33969"), "fieldname": "fl33969", "fieldtype": "Float", "precision": 2,  "width": 80},
         {"label": _("FL 38141"), "fieldname": "fl38141", "fieldtype": "Float", "precision": 2, "width": 80},
@@ -56,12 +57,14 @@ def get_data(filters):
             `base_doc`.`relation` AS `relation`,
             `base_doc`.`gestellungsdatum` AS `gestellungsdatum`,
             `base_doc`.`supplier` AS `supplier`,
+            `base_doc`.`po` AS `purchase_order`,
             `base_doc`.`fl30042` AS `fl30042`,
             `base_doc`.`fl33969` AS `fl33969`,
             `base_doc`.`fl38141` AS `fl38141`,
             `base_doc`.`fl39228` AS `fl39228`,
             IF (`sinv`.`status` = 'Completed', 0, `base_doc`.`base_grand_total`) AS `offen`,
-            `base_doc`.`fremd` AS `fremd`,
+            /*`base_doc`.`fremd` AS `fremd`,*/
+            IF ((`base_doc`.`supplier` = "Holtkemper"), 0, IFNULL(`base_doc`.`base_grand_total`, 0)) AS `fremd`,
             `base_doc`.`aufwand` AS `aufwand`,
             `base_doc`.`erloes`
         FROM (
@@ -73,12 +76,13 @@ def get_data(filters):
                 `dn`.`customer`,
                 `dn`.`relation`,
                 `dn`.`gestellungsdatum`,
+                `po`.`name` AS `po`,
                 IF (("FL 30042" | "FL 33969" | "FL 38141" | "FL 39228") = `dn`.`truck`, "Holtkemper", `sup`.`supplier_name`) AS `supplier`,
                 IF (`dn`.`truck` = "FL30042", `dn`.`base_grand_total`, 0) AS `fl30042`,
                 IF (`dn`.`truck` = "FL33969", `dn`.`base_grand_total`, 0) AS `fl33969`,
                 IF (`dn`.`truck` = "FL38141", `dn`.`base_grand_total`, 0) AS `fl38141`,
                 IF (`dn`.`truck` = "FL39228", `dn`.`base_grand_total`, 0) AS `fl39228`,
-                IF ((`dn`.`supplier` IS NULL ) OR (`dn`.`supplier` = ""), 0, IFNULL(`dn`.`base_grand_total`, 0)) AS `fremd`,
+                /*IF ((`dn`.`supplier` IS NULL ) OR (`dn`.`supplier` = ""), 0, IFNULL(`dn`.`base_grand_total`, 0)) AS `fremd`,*/
                 IF (`po`.`delivery_note` IS NOT NULL, IFNULL(`po`.`base_grand_total`, 0), 0) AS `aufwand`,
                 NULL AS `erloes`,
                 (
@@ -111,6 +115,8 @@ def get_data(filters):
     # add totals
     totals = { 'erloes': 0, }
     for row in _data:
-        row['erloes'] = round(float(row['fremd']) - float(row['aufwand']), 2)
-    
+        if row['fremd'] > 0:
+            row['erloes'] = round(float(row['fremd']) - float(row['aufwand']), 2)
+        else: 
+            row['erloes'] = round(float(row['aufwand']), 2)
     return _data
